@@ -101,8 +101,9 @@ jobs:
         run: |
           [[ "$MODEL_RELEASE" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]
           [[ "$MODEL_ASSET" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*\.tar\.gz$ ]]
-          gh release download "$MODEL_RELEASE" --repo "$GITHUB_REPOSITORY" \
-            --pattern "$MODEL_ASSET" --output "$RUNNER_TEMP/Slowth-models.tar.gz"
+          curl --fail --location --retry 3 \
+            --output "$RUNNER_TEMP/Slowth-models.tar.gz" \
+            "https://github.com/${GITHUB_REPOSITORY}/releases/download/${MODEL_RELEASE}/${MODEL_ASSET}"
       - name: Verify the pinned tag-release model archive
         if: inputs.release_tag != ''
         run: |
